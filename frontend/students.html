@@ -7,9 +7,36 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Student Registrations</h1>
-    <ul id="studentList">
-        </ul>
+    <div class="container">
+        <header>
+            <h1>Student Registrations</h1>
+            <div class="search-bar">
+                <input type="text" id="studentSearch" placeholder="Search students...">
+            </div>
+        </header>
+
+        <main>
+            <section class="students-section">
+                <div class="students-list" id="studentList">
+                    <!-- Student entries will be dynamically added here -->
+                    <div class="student-entry">
+                        <h3>Alice Smith (alice.smith@example.com)</h3>
+                        <p>Registered for:</p>
+                        <ul class="registered-courses">
+                            <!-- Registered courses will be added here -->
+                        </ul>
+                    </div>
+                    <div class="student-entry">
+                        <h3>Bob Johnson (bob.johnson@example.com)</h3>
+                        <p>Registered for:</p>
+                        <ul class="registered-courses">
+                            <!-- Registered courses will be added here -->
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script src="script.js"></script>
 </body>

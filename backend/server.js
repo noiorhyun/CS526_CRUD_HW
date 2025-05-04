@@ -1,5 +1,5 @@
 const express = require('express');
-const getConn = require('./db'); 
+const getConn = require('./db');    
 const cors = require('cors');
 
 const app = express();
@@ -36,6 +36,23 @@ let conn; // Declare conn in the outer scope
       } catch (error) {
         console.error('Error fetching students:', error);
         res.status(500).json({ error: 'Failed to fetch students' });
+      }
+    });
+
+    // GET student's course registrations
+    app.get('/students/:student_id/registrations', async (req, res) => {
+      const student_id = req.params.student_id;
+      try {
+        const [rows] = await conn.query(`
+          SELECT r.reg_id, c.course_name, c.section 
+          FROM registrations r
+          JOIN courses c ON r.course_id = c.course_id
+          WHERE r.student_id = ?
+        `, [student_id]);
+        res.json(rows);
+      } catch (error) {
+        console.error('Error fetching student registrations:', error);
+        res.status(500).json({ error: 'Failed to fetch student registrations' });
       }
     });
 

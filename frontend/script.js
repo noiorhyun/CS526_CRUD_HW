@@ -65,33 +65,59 @@ async function loadStudentRegistrations() {
         const students = await response.json();
         const studentList = document.getElementById('studentList');
         studentList.innerHTML = ''; // Clear existing list
+
         for (const student of students) {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `<strong>${student.name}</strong> (${student.email}) - Registered for: <ul id="registrations-${student.student_id}"></ul>`;
-            studentList.appendChild(listItem);
-            await loadRegistrationsForStudent(student.student_id);
+            // Create student entry container
+            const studentEntry = document.createElement('div');
+            studentEntry.className = 'student-entry';
+
+            // Create student name and email heading
+            const studentHeading = document.createElement('h3');
+            studentHeading.textContent = `${student.name} (${student.email})`;
+            studentEntry.appendChild(studentHeading);
+
+            // Add "Registered for:" text
+            const registeredText = document.createElement('p');
+            registeredText.textContent = 'Registered for:';
+            studentEntry.appendChild(registeredText);
+
+            // Create list for registered courses
+            const coursesList = document.createElement('ul');
+            coursesList.className = 'registered-courses';
+
+            // Fetch and display registrations for this student
+            try {
+                const registrationsResponse = await fetch(`${API_BASE_URL}/students/${student.student_id}/registrations`);
+                if (!registrationsResponse.ok) {
+                    throw new Error('Failed to fetch registrations');
+                }
+                const registrations = await registrationsResponse.json();
+                
+                if (registrations.length === 0) {
+                    const noCoursesItem = document.createElement('li');
+                    noCoursesItem.textContent = 'No courses registered yet';
+                    coursesList.appendChild(noCoursesItem);
+                } else {
+                    registrations.forEach(reg => {
+                        const courseItem = document.createElement('li');
+                        courseItem.textContent = `${reg.course_name} (Section ${reg.section})`;
+                        coursesList.appendChild(courseItem);
+                    });
+                }
+            } catch (error) {
+                console.error(`Error loading registrations for student ${student.student_id}:`, error);
+                const errorItem = document.createElement('li');
+                errorItem.textContent = 'No courses registered yet';
+                coursesList.appendChild(errorItem);
+            }
+
+            studentEntry.appendChild(coursesList);
+            studentList.appendChild(studentEntry);
         }
     } catch (error) {
         console.error('Error loading students:', error);
-    }
-}
-
-async function loadRegistrationsForStudent(studentId) {
-    try {
-        // This endpoint doesn't exist yet in your backend.
-        // You would need to create a new one to fetch registrations for a specific student.
-        // For now, we'll just log a message.
-        console.log(`Fetching registrations for student ${studentId}`);
-        // const response = await fetch(`${API_BASE_URL}/students/${studentId}/registrations`);
-        // const registrations = await response.json();
-        // const registrationsList = document.getElementById(`registrations-${studentId}`);
-        // registrations.forEach(reg => {
-        //     const regItem = document.createElement('li');
-        //     regItem.textContent = `Course ID: ${reg.course_id}`; // You might want to fetch course name here
-        //     registrationsList.appendChild(regItem);
-        // });
-    } catch (error) {
-        console.error(`Error loading registrations for student ${studentId}:`, error);
+        const studentList = document.getElementById('studentList');
+        studentList.innerHTML = '<div class="error">Error loading student data</div>';
     }
 }
 

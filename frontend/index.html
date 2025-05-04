@@ -3,27 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course Registration</title>
+    <title>Course Registration System</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Available Courses</h1>
-    <ul id="courseList">
-        </ul>
+    <div class="container">
+        <header>
+            <h1>Course Registration System</h1>
+        </header>
 
-    <h2>Register for a Course</h2>
-    <form id="registrationForm">
-        <div>
-            <label for="studentId">Student ID:</label>
-            <input type="number" id="studentId" required>
-        </div>
-        <div>
-            <label for="courseId">Course ID:</label>
-            <input type="number" id="courseId" required>
-        </div>
-        <button type="submit">Register</button>
-        <div id="registrationMessage" class="message"></div>
-    </form>
+        <main>
+            <section class="courses-section">
+                <h2>Available Courses</h2>
+                <div class="course-filters">
+                    <input type="text" id="courseSearch" placeholder="Search courses...">
+                    <select id="departmentFilter">
+                        <option value="">All Departments</option>
+                        <option value="CS">Computer Science</option>
+                        <option value="MATH">Mathematics</option>
+                        <option value="ENG">Engineering</option>
+                    </select>
+                </div>
+                <div class="course-list" id="courseList">
+                    <!-- Course items will be dynamically added here -->
+                </div>
+            </section>
+
+            <section class="registration-section">
+                <h2>Course Registration</h2>
+                <form id="registrationForm" class="registration-form">
+                    <div class="form-group">
+                        <label for="studentId">Student ID:</label>
+                        <input type="number" id="studentId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="courseId">Course ID:</label>
+                        <input type="number" id="courseId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="semester">Semester:</label>
+                        <select id="semester" required>
+                            <option value="">Select Semester</option>
+                            <option value="FALL">Fall</option>
+                            <option value="SPRING">Spring</option>
+                            <option value="SUMMER">Summer</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-btn">Register</button>
+                    <div id="registrationMessage" class="message"></div>
+                </form>
+            </section>
+
+            <section class="registered-courses">
+                <h2>Your Registered Courses</h2>
+                <div id="registeredCoursesList">
+                    <!-- Registered courses will be displayed here -->
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script src="script.js"></script>
 </body>
