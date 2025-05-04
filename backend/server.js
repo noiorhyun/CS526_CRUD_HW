@@ -44,7 +44,7 @@ let conn; // Declare conn in the outer scope
       const student_id = req.params.student_id;
       try {
         const [rows] = await conn.query(`
-          SELECT r.reg_id, c.course_name, c.section 
+          SELECT r.reg_id, r.course_id, c.course_name, c.section 
           FROM registrations r
           JOIN courses c ON r.course_id = c.course_id
           WHERE r.student_id = ?
