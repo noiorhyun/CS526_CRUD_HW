@@ -2,6 +2,10 @@
 
 const API_BASE_URL = 'http://localhost:3000'; // Adjust if your backend runs on a different port
 
+// Global variables
+let currentStudentId = null;
+let currentStudentName = null;
+
 // Function to fetch and display courses on index.html
 async function loadCourses() {
     try {
@@ -62,7 +66,7 @@ async function loadRegisteredCourses(studentId) {
             return;
         }
 
-        // Create a table for registered courses
+        // Create table
         const table = document.createElement('table');
         table.className = 'course-table';
         
@@ -73,6 +77,7 @@ async function loadRegisteredCourses(studentId) {
                 <th>Course ID</th>
                 <th>Course Name</th>
                 <th>Section</th>
+                <th>Action</th>
             </tr>
         `;
         table.appendChild(thead);
@@ -85,6 +90,9 @@ async function loadRegisteredCourses(studentId) {
                 <td>${reg.course_id}</td>
                 <td>${reg.course_name}</td>
                 <td>${reg.section}</td>
+                <td>
+                    <button class="drop-btn" onclick="dropCourse(${reg.reg_id})">Drop</button>
+                </td>
             `;
             tbody.appendChild(row);
         });
@@ -240,5 +248,153 @@ if (updateForm) {
             updateMessage.textContent = 'Failed to connect to the server';
             updateMessage.className = 'message error';
         }
+    });
+}
+
+// Function to handle student login
+async function handleLogin(studentId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/students/${studentId}`);
+        if (!response.ok) {
+            throw new Error('Student not found');
+        }
+        const student = await response.json();
+        
+        if (!student) {
+            throw new Error('Student not found');
+        }
+
+        currentStudentId = studentId;
+        currentStudentName = student.name;
+        
+        // Show course management section
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('courseManagementSection').style.display = 'block';
+        document.getElementById('studentName').textContent = student.name;
+        
+        // Load both tables
+        await loadAvailableCourses();
+        await loadRegisteredCourses(studentId);
+    } catch (error) {
+        console.error('Login error:', error);
+        const loginMessage = document.getElementById('loginMessage');
+        loginMessage.textContent = 'Invalid Student ID';
+        loginMessage.className = 'message error';
+    }
+}
+
+// Function to load available courses
+async function loadAvailableCourses() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/courses`);
+        const courses = await response.json();
+        const availableCoursesList = document.getElementById('availableCoursesList');
+        
+        // Create table
+        const table = document.createElement('table');
+        table.className = 'course-table';
+        
+        // Create table header
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+            <tr>
+                <th>Course ID</th>
+                <th>Course Name</th>
+                <th>Section</th>
+                <th>Capacity</th>
+                <th>Action</th>
+            </tr>
+        `;
+        table.appendChild(thead);
+
+        // Create table body
+        const tbody = document.createElement('tbody');
+        courses.forEach(course => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${course.course_id}</td>
+                <td>${course.course_name}</td>
+                <td>${course.section}</td>
+                <td>${course.capacity}</td>
+                <td>
+                    <button class="add-btn" onclick="registerForCourse(${course.course_id})">Add</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+        table.appendChild(tbody);
+        availableCoursesList.innerHTML = '';
+        availableCoursesList.appendChild(table);
+    } catch (error) {
+        console.error('Error loading available courses:', error);
+        const availableCoursesList = document.getElementById('availableCoursesList');
+        availableCoursesList.innerHTML = '<p class="error">Error loading available courses</p>';
+    }
+}
+
+// Function to register for a course
+async function registerForCourse(courseId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ student_id: currentStudentId, course_id: courseId }),
+        });
+
+        const data = await response.json();
+        const messageDiv = document.createElement('div');
+        messageDiv.className = response.ok ? 'message success' : 'message error';
+        messageDiv.textContent = data.message || data.error;
+        document.body.appendChild(messageDiv);
+        
+        // Remove message after 3 seconds
+        setTimeout(() => messageDiv.remove(), 3000);
+
+        // Refresh both tables
+        await loadAvailableCourses();
+        await loadRegisteredCourses(currentStudentId);
+    } catch (error) {
+        console.error('Error registering for course:', error);
+    }
+}
+
+// Function to drop a course
+async function dropCourse(regId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/deregister/${regId}`, {
+            method: 'DELETE',
+        });
+
+        const data = await response.json();
+        const messageDiv = document.createElement('div');
+        messageDiv.className = response.ok ? 'message success' : 'message error';
+        messageDiv.textContent = data.message || data.error;
+        document.body.appendChild(messageDiv);
+        
+        // Remove message after 3 seconds
+        setTimeout(() => messageDiv.remove(), 3000);
+
+        // Refresh both tables
+        await loadAvailableCourses();
+        await loadRegisteredCourses(currentStudentId);
+    } catch (error) {
+        console.error('Error dropping course:', error);
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message error';
+        messageDiv.textContent = 'Failed to drop course';
+        document.body.appendChild(messageDiv);
+        setTimeout(() => messageDiv.remove(), 3000);
+    }
+}
+
+// Event listener for login form
+const loginForm = document.getElementById('loginForm');
+if (loginForm) {
+    loginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const studentId = document.getElementById('studentId').value;
+        handleLogin(studentId);
     });
 }

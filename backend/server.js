@@ -39,6 +39,21 @@ let conn; // Declare conn in the outer scope
       }
     });
 
+    // GET single student by ID
+    app.get('/students/:student_id', async (req, res) => {
+      const student_id = req.params.student_id;
+      try {
+        const [rows] = await conn.query('SELECT * FROM students WHERE student_id = ?', [student_id]);
+        if (rows.length === 0) {
+          return res.status(404).json({ error: 'Student not found' });
+        }
+        res.json(rows[0]);
+      } catch (error) {
+        console.error('Error fetching student:', error);
+        res.status(500).json({ error: 'Failed to fetch student' });
+      }
+    });
+
     // GET student's course registrations
     app.get('/students/:student_id/registrations', async (req, res) => {
       const student_id = req.params.student_id;

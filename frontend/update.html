@@ -3,23 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Registration</title>
+    <title>Student Course Management</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Update Course Registration</h1>
-    <form id="updateForm">
-        <div>
-            <label for="regId">Registration ID:</label>
-            <input type="number" id="regId" required>
-        </div>
-        <div>
-            <label for="newCourseId">New Course ID:</label>
-            <input type="number" id="newCourseId" required>
-        </div>
-        <button type="submit">Update Registration</button>
-        <div id="updateMessage" class="message"></div>
-    </form>
+    <div class="container">
+        <header>
+            <h1>Student Course Management</h1>
+        </header>
+
+        <main>
+            <!-- Login Section -->
+            <section id="loginSection" class="login-section">
+                <h2>Student Login</h2>
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="studentId">Student ID:</label>
+                        <input type="number" id="studentId" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Login</button>
+                    <div id="loginMessage" class="message"></div>
+                </form>
+            </section>
+
+            <!-- Course Management Section (hidden until login) -->
+            <section id="courseManagementSection" class="course-management-section" style="display: none;">
+                <h2>Welcome, <span id="studentName"></span></h2>
+                
+                <!-- Available Courses Table -->
+                <div class="table-section">
+                    <h3>Available Courses</h3>
+                    <div class="course-filters">
+                        <input type="text" id="courseSearch" placeholder="Search courses...">
+                    </div>
+                    <div class="course-list" id="availableCoursesList">
+                        <!-- Available courses will be dynamically added here -->
+                    </div>
+                </div>
+
+                <!-- Registered Courses Table -->
+                <div class="table-section">
+                    <h3>My Registered Courses</h3>
+                    <div id="registeredCoursesList">
+                        <!-- Registered courses will be dynamically added here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script src="script.js"></script>
 </body>
