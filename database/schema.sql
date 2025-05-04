@@ -1,0 +1,35 @@
+CREATE TABLE students (
+  student_id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(100),
+  email VARCHAR(100) UNIQUE
+);
+
+CREATE TABLE courses (
+  course_id INT PRIMARY KEY AUTO_INCREMENT,
+  course_name VARCHAR(100),
+  section VARCHAR(10),
+  capacity INT
+);
+
+CREATE TABLE registrations (
+  reg_id INT PRIMARY KEY AUTO_INCREMENT,
+  student_id INT,
+  course_id INT,
+  FOREIGN KEY (student_id) REFERENCES students(student_id),
+  FOREIGN KEY (course_id) REFERENCES courses(course_id)
+);
+
+-- insert data for students table
+INSERT INTO students (name, email) VALUES
+('Alice Smith', 'alice.smith@example.com'),
+('Bob Johnson', 'bob.johnson@example.com');
+
+-- insert data for courses table
+INSERT INTO courses (course_name, section, capacity) VALUES
+('Introduction to Programming', 'A', 30),
+('Database Management', 'B', 25);
+
+-- insert data for registrations table
+INSERT INTO registrations (student_id, course_id) VALUES
+(1, 1), -- Alice registered Introduction to Programming
+(2, 2); -- Bob registered Database Management

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Update Course Registration</h1>
+    <form id="updateForm">
+        <div>
+            <label for="regId">Registration ID:</label>
+            <input type="number" id="regId" required>
+        </div>
+        <div>
+            <label for="newCourseId">New Course ID:</label>
+            <input type="number" id="newCourseId" required>
+        </div>
+        <button type="submit">Update Registration</button>
+        <div id="updateMessage" class="message"></div>
+    </form>
+
+    <script src="script.js"></script>
+</body>
+</html>

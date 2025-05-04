@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Available Courses</h1>
+    <ul id="courseList">
+        </ul>
+
+    <h2>Register for a Course</h2>
+    <form id="registrationForm">
+        <div>
+            <label for="studentId">Student ID:</label>
+            <input type="number" id="studentId" required>
+        </div>
+        <div>
+            <label for="courseId">Course ID:</label>
+            <input type="number" id="courseId" required>
+        </div>
+        <button type="submit">Register</button>
+        <div id="registrationMessage" class="message"></div>
+    </form>
+
+    <script src="script.js"></script>
+</body>
+</html>
