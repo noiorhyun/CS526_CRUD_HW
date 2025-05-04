@@ -1,6 +1,5 @@
-// backend/server.js
 const express = require('express');
-const getConn = require('./db'); // Import the promise of the connection
+const getConn = require('./db'); 
 const cors = require('cors');
 
 const app = express();
@@ -12,12 +11,13 @@ app.use(express.urlencoded({ extended: true }));
 
 let conn; // Declare conn in the outer scope
 
-// Initialize the connection and then start the server and define routes
+// Initialize the connection
 (async () => {
   try {
-    conn = await getConn; // Await the connection
-    // API endpoints
+    conn = await getConn;
 
+    // API endpoints
+    // GET all courses
     app.get('/courses', async (req, res) => {
       try {
         const [rows] = await conn.query('SELECT * FROM courses');
@@ -28,6 +28,7 @@ let conn; // Declare conn in the outer scope
       }
     });
 
+    // GET all students
     app.get('/students', async (req, res) => {
       try {
         const [rows] = await conn.query('SELECT * FROM students');
@@ -38,6 +39,7 @@ let conn; // Declare conn in the outer scope
       }
     });
 
+    // POST register student to a course
     app.post('/register', async (req, res) => {
       const { student_id, course_id } = req.body;
       if (!student_id || !course_id) {
@@ -75,6 +77,7 @@ let conn; // Declare conn in the outer scope
       }
     });
 
+    // PUT (Update student's course)
     app.put('/update-registration', async (req, res) => {
       const { reg_id, course_id } = req.body;
       if (!reg_id || !course_id) {
@@ -96,6 +99,7 @@ let conn; // Declare conn in the outer scope
       }
     });
 
+    // DELETE (Remove registration)
     app.delete('/deregister/:reg_id', async (req, res) => {
       const reg_id = req.params.reg_id;
       try {
