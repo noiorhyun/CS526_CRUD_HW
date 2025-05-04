@@ -63,31 +63,44 @@ let conn; // Declare conn in the outer scope
         return res.status(400).json({ error: 'Student ID and Course ID are required' });
       }
       try {
-        // 1. Get course capacity
-        const [courseRows] = await conn.query('SELECT capacity FROM courses WHERE course_id = ?', [course_id]);
+        // 1. Check if student is already registered for this course
+        const [existingReg] = await conn.query(
+          'SELECT * FROM registrations WHERE student_id = ? AND course_id = ?',
+          [student_id, course_id]
+        );
+        if (existingReg.length > 0) {
+          return res.status(400).json({ error: 'You have already registered for this course' });
+        }
+
+        // 2. Get course capacity
+        const [courseRows] = await conn.query('SELECT * FROM courses WHERE course_id = ?', [course_id]);
         if (courseRows.length === 0) {
           return res.status(400).json({ error: 'Course not found' });
         }
         const capacity = courseRows[0].capacity;
 
-        // 2. Count existing registrations
+        // 3. Count existing registrations
         const [registrationCountRows] = await conn.query(
           'SELECT COUNT(*) AS count FROM registrations WHERE course_id = ?',
           [course_id]
         );
         const registrationCount = registrationCountRows[0].count;
 
-        // 3. Check capacity
+        // 4. Check capacity
         if (registrationCount >= capacity) {
           return res.status(400).json({ error: 'Course is full' });
         }
 
-        // 4. Insert registration (if not full)
+        // 5. Insert registration (if not full)
         const [result] = await conn.query(
           'INSERT INTO registrations (student_id, course_id) VALUES (?, ?)',
           [student_id, course_id]
         );
-        res.status(201).json({ message: 'Registration successful', reg_id: result.insertId });
+        res.status(201).json({ 
+          message: 'Registration successful', 
+          reg_id: result.insertId,
+          course: courseRows[0] // Include course details in response
+        });
       } catch (error) {
         console.error('Error registering student:', error);
         res.status(500).json({ error: 'Failed to register student' });

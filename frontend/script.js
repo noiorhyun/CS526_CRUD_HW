@@ -9,13 +9,92 @@ async function loadCourses() {
         const courses = await response.json();
         const courseList = document.getElementById('courseList');
         courseList.innerHTML = ''; // Clear existing list
+
+        // Create a table to display courses
+        const table = document.createElement('table');
+        table.className = 'course-table';
+        
+        // Create table header
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+            <tr>
+                <th>Course ID</th>
+                <th>Course Name</th>
+                <th>Section</th>
+                <th>Capacity</th>
+            </tr>
+        `;
+        table.appendChild(thead);
+
+        // Create table body
+        const tbody = document.createElement('tbody');
         courses.forEach(course => {
-            const listItem = document.createElement('li');
-            listItem.textContent = `${course.course_name} (Section ${course.section})`;
-            courseList.appendChild(listItem);
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${course.course_id}</td>
+                <td>${course.course_name}</td>
+                <td>${course.section}</td>
+                <td>${course.capacity}</td>
+            `;
+            tbody.appendChild(row);
         });
+        table.appendChild(tbody);
+        courseList.appendChild(table);
     } catch (error) {
         console.error('Error loading courses:', error);
+        const courseList = document.getElementById('courseList');
+        courseList.innerHTML = '<div class="error">Error loading courses</div>';
+    }
+}
+
+// Function to load registered courses for a student
+async function loadRegisteredCourses(studentId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/students/${studentId}/registrations`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch registered courses');
+        }
+        const registrations = await response.json();
+        const registeredCoursesList = document.getElementById('registeredCoursesList');
+        
+        if (registrations.length === 0) {
+            registeredCoursesList.innerHTML = '<p>No courses registered yet</p>';
+            return;
+        }
+
+        // Create a table for registered courses
+        const table = document.createElement('table');
+        table.className = 'course-table';
+        
+        // Create table header
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+            <tr>
+                <th>Course ID</th>
+                <th>Course Name</th>
+                <th>Section</th>
+            </tr>
+        `;
+        table.appendChild(thead);
+
+        // Create table body
+        const tbody = document.createElement('tbody');
+        registrations.forEach(reg => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${reg.course_id}</td>
+                <td>${reg.course_name}</td>
+                <td>${reg.section}</td>
+            `;
+            tbody.appendChild(row);
+        });
+        table.appendChild(tbody);
+        registeredCoursesList.innerHTML = '';
+        registeredCoursesList.appendChild(table);
+    } catch (error) {
+        console.error('Error loading registered courses:', error);
+        const registeredCoursesList = document.getElementById('registeredCoursesList');
+        registeredCoursesList.innerHTML = '<p class="error">Error loading registered courses</p>';
     }
 }
 
@@ -41,12 +120,16 @@ if (registrationForm) {
             if (response.ok) {
                 registrationMessage.textContent = data.message;
                 registrationMessage.className = 'message success';
-                // Optionally reload courses or clear the form
-                loadCourses();
             } else {
                 registrationMessage.textContent = data.error || 'Registration failed';
                 registrationMessage.className = 'message error';
             }
+            
+            // Always load registered courses after any registration attempt
+            await loadRegisteredCourses(studentId);
+            
+            // Clear the course ID input
+            document.getElementById('courseId').value = '';
         } catch (error) {
             console.error('Error registering:', error);
             registrationMessage.textContent = 'Failed to connect to the server';
