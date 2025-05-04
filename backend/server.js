@@ -1,3 +1,4 @@
+// backend/server.js
 const express = require('express');
 const getConn = require('./db'); // Import the promise of the connection
 const cors = require('cors');
