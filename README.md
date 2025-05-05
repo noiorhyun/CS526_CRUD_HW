@@ -56,6 +56,12 @@ The backend API provides the following endpoints:
     * **Sample Response:**
     ![Get Courses Request in Postman](sample_output/postman_delete_registration.png)
 
+* **`GET /export/registrations`**: Export registration data as a CSV file.
+* **Sample Request:** `http://localhost:3000/export/registrations`
+    * **Sample Response:**
+        The browser will download a CSV file named `registrations.csv`. The file will contain the following columns: `reg_id`, `student_id`, `student_name`, `email`, `course_id`, `course_name`, and `section`.
+
+
 ## Assumptions Made or Known Limitations
 
 * **Basic UI:** The frontend styling (`style.css`) is minimal and intended for basic functionality and clean presentation.
