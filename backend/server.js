@@ -1,6 +1,7 @@
 const express = require('express');
 const getConn = require('./db');    
 const cors = require('cors');
+const { Parser } = require('json2csv');
 
 const app = express();
 const PORT = 3000;
@@ -166,6 +167,39 @@ let conn; // Declare conn in the outer scope
       } catch (error) {
         console.error('Error deregistering student:', error);
         res.status(500).json({ error: 'Failed to deregister student' });
+      }
+    });
+
+    // New endpoint to export registrations as CSV
+    app.get('/export/registrations', async (req, res) => {
+      try {
+        // 1. Query the database
+        const [registrations] = await conn.query(`
+          SELECT
+            r.reg_id,
+            s.student_id,
+            s.name AS student_name,
+            s.email,
+            c.course_id,
+            c.course_name,
+            c.section
+          FROM registrations r
+          JOIN students s ON r.student_id = s.student_id
+          JOIN courses c ON r.course_id = c.course_id
+        `);
+
+        // 2. Format the data into CSV
+        const fields = ['reg_id', 'student_id', 'student_name', 'email', 'course_id', 'course_name', 'section'];
+        const parser = new Parser({ fields });
+        const csv = parser.parse(registrations);
+
+        // 3. Send the CSV as a response
+        res.header('Content-Type', 'text/csv');
+        res.header('Content-Disposition', 'attachment; filename=registrations.csv');
+        res.send(csv);
+      } catch (error) {
+        console.error('Error exporting registrations:', error);
+        res.status(500).json({ error: 'Failed to export registrations' });
       }
     });
 

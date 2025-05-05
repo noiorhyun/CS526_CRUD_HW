@@ -16,12 +16,13 @@ A full-stack web application that simulates a university's course registration p
     This command runs the `server.js` file using Node.js, and your backend API will be accessible on `http://localhost:3000`.
 
 ## Access the Frontend
-    Open your web browser and navigate to the HTML files in the `frontend` directory. For example:
-    * **Course Listing and Registration:** `http://127.0.0.1:5500/frontend/index.html` (e.g., `/Users/your_username/YuexuanLu_161034_Project/frontend/index.html`)
-    * **Student Registrations:** `[file_path_to_your_project]/frontend/students.html`
-    * **Update Registration:** `[file_path_to_your_project]/frontend/update.html`
 
-    The frontend pages will then make requests to the backend API running on `http://localhost:3000`.
+    The frontend of this application is designed to be served from a local development server. To access the frontend pages, ensure your backend server is running, and then use the following URLs in your web browser:
+
+    * **Course Listing and Registration:** `http://127.0.0.1:5500/frontend/index.html`
+    * **Student Registrations:** `http://127.0.0.1:5500/frontend/students.html`
+    * **Update Registration:** `http://127.0.0.1:5500/frontend/update.html`
+
 
 ## API Routes & Sample Requests
 
