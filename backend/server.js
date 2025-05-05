@@ -20,7 +20,13 @@ let conn; // Declare conn in the outer scope
     // GET all courses
     app.get('/courses', async (req, res) => {
       try {
-        const [rows] = await conn.query('SELECT * FROM courses');
+        const [rows] = await conn.query(`
+          SELECT 
+            c.*,
+            (SELECT COUNT(*) FROM registrations WHERE course_id = c.course_id) as current_registrations,
+            (c.capacity - (SELECT COUNT(*) FROM registrations WHERE course_id = c.course_id)) as available_seats
+          FROM courses c
+        `);
         res.json(rows);
       } catch (error) {
         console.error('Error fetching courses:', error);

@@ -302,6 +302,7 @@ async function loadAvailableCourses() {
                 <th>Course Name</th>
                 <th>Section</th>
                 <th>Capacity</th>
+                <th>Available Seats</th>
                 <th>Action</th>
             </tr>
         `;
@@ -311,13 +312,19 @@ async function loadAvailableCourses() {
         const tbody = document.createElement('tbody');
         courses.forEach(course => {
             const row = document.createElement('tr');
+            const availableSeats = course.available_seats;
+            const isFull = availableSeats <= 0;
+            
             row.innerHTML = `
                 <td>${course.course_id}</td>
                 <td>${course.course_name}</td>
                 <td>${course.section}</td>
                 <td>${course.capacity}</td>
+                <td class="${isFull ? 'full' : ''}">${availableSeats}</td>
                 <td>
-                    <button class="add-btn" onclick="registerForCourse(${course.course_id})">Add</button>
+                    <button class="add-btn" onclick="registerForCourse(${course.course_id})" ${isFull ? 'disabled' : ''}>
+                        ${isFull ? 'Full' : 'Add'}
+                    </button>
                 </td>
             `;
             tbody.appendChild(row);

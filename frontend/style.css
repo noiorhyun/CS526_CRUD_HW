@@ -184,3 +184,18 @@ button:hover {
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
+
+/* Course Table Styles */
+.course-table td.full {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.add-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.add-btn:disabled:hover {
+    background-color: #6c757d;
+}
