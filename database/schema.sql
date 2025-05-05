@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS registrations;
+DROP TABLE IF EXISTS courses;
+DROP TABLE IF EXISTS students;
+
 CREATE TABLE students (
   student_id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(100),
@@ -26,10 +30,12 @@ INSERT INTO students (name, email) VALUES
 
 -- insert data for courses table
 INSERT INTO courses (course_name, section, capacity) VALUES
-('Introduction to Programming', 'A', 30),
-('Database Management', 'B', 25);
+('Introduction to Programming', 'A', 1),  -- Capacity set to 1
+('Introduction to Programming', 'B', 1),  -- Capacity set to 1
+('Database Management', 'C', 1),      -- Capacity set to 1
+('Database Management', 'D', 1);      -- Capacity set to 1
 
 -- insert data for registrations table
 INSERT INTO registrations (student_id, course_id) VALUES
-(1, 1), -- Alice registered Introduction to Programming
-(2, 2); -- Bob registered Database Management
+(1, 1), -- Alice registered Introduction to Programming A
+(2, 4); -- Bob registered Database Management D
