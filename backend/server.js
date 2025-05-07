@@ -6,21 +6,22 @@ const { Parser } = require('json2csv');
 const app = express();
 const PORT = 3000;
 
+// Enable CORS and JSON parsing middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-let conn; // Declare conn in the outer scope
+let conn; // Database connection object
 
-// Initialize the connection
 (async () => {
   try {
     conn = await getConn;
 
     // API endpoints
-    // GET all courses
+    // GET all courses with available seats information
     app.get('/courses', async (req, res) => {
       try {
+        // Query to get courses with current registration count and available seats
         const [rows] = await conn.query(`
           SELECT 
             c.*,
@@ -46,7 +47,7 @@ let conn; // Declare conn in the outer scope
       }
     });
 
-    // GET single student by ID
+    // GET single student by ID for login
     app.get('/students/:student_id', async (req, res) => {
       const student_id = req.params.student_id;
       try {
@@ -65,6 +66,7 @@ let conn; // Declare conn in the outer scope
     app.get('/students/:student_id/registrations', async (req, res) => {
       const student_id = req.params.student_id;
       try {
+        // Join registrations with courses to get course details
         const [rows] = await conn.query(`
           SELECT r.reg_id, r.course_id, c.course_name, c.section 
           FROM registrations r
@@ -129,28 +131,6 @@ let conn; // Declare conn in the outer scope
       }
     });
 
-    // PUT (Update student's course)
-    app.put('/update-registration', async (req, res) => {
-      const { reg_id, course_id } = req.body;
-      if (!reg_id || !course_id) {
-        return res.status(400).json({ error: 'Registration ID and new Course ID are required' });
-      }
-      try {
-        const [result] = await conn.query(
-          'UPDATE registrations SET course_id = ? WHERE reg_id = ?',
-          [course_id, reg_id]
-        );
-        if (result.affectedRows > 0) {
-          res.json({ message: 'Registration updated successfully' });
-        } else {
-          res.status(404).json({ error: 'Registration not found' });
-        }
-      } catch (error) {
-        console.error('Error updating registration:', error);
-        res.status(500).json({ error: 'Failed to update registration' });
-      }
-    });
-
     // DELETE (Remove registration)
     app.delete('/deregister/:reg_id', async (req, res) => {
       const reg_id = req.params.reg_id;
@@ -170,10 +150,10 @@ let conn; // Declare conn in the outer scope
       }
     });
 
-    // New endpoint to export registrations as CSV
+    // Export registrations as CSV
     app.get('/export/registrations', async (req, res) => {
       try {
-        // 1. Query the database
+        // 1. Query the database for all registrations with student and course details
         const [registrations] = await conn.query(`
           SELECT
             r.reg_id,
@@ -193,7 +173,7 @@ let conn; // Declare conn in the outer scope
         const parser = new Parser({ fields });
         const csv = parser.parse(registrations);
 
-        // 3. Send the CSV as a response
+        // 3. Send the CSV as a downloadable file
         res.header('Content-Type', 'text/csv');
         res.header('Content-Disposition', 'attachment; filename=registrations.csv');
         res.send(csv);
