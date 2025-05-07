@@ -1,6 +1,6 @@
 # Student Course Registration Portal
 
-A full-stack web application that simulates a university's course registration portal. Students can view available courses, register for courses, update their registration, and deregister from courses.
+This is a full-stack web application that simulates a university's course registration portal. Students can view available courses, register for courses, update their registration, and deregister from courses.
 
 ## Setup Instructions
 
@@ -9,8 +9,20 @@ A full-stack web application that simulates a university's course registration p
     cd backend
     npm install
     ```
-2.  **Start the backend server:**
+
+2.  **Set up the database schema:**
+    * Navigate to the `database` directory:
+        ```bash
+        cd database
+        ```
+    * Execute the `schema.sql` file against your MySQL database using the `mysql` command-line client:
+        ```bash
+        mysql -u root -p YuexuanLu_161034_DB < schema.sql
+        ```
+
+3.  **Start the backend server:**
     ```bash
+    cd backend
     npm start
     ```
     This command runs the `server.js` file using Node.js, and your backend API will be accessible on `http://localhost:3000`.
@@ -35,9 +47,11 @@ A full-stack web application that simulates a university's course registration p
 * **Update Registration**:
 ![http://127.0.0.1:5500/frontend/update.html](images/update_login.png)
 ![http://127.0.0.1:5500/frontend/update.html](images/update_page.png)
-![http://127.0.0.1:5500/frontend/update.html](images/alert_add.png)
-![http://127.0.0.1:5500/frontend/update.html](images/alert_confirm.png)
-![http://127.0.0.1:5500/frontend/update.html](images/alert_drop.png)
+![http://127.0.0.1:5500/frontend/update.html](sample_output/registration_success.png)
+![http://127.0.0.1:5500/frontend/update.html](sample_output/update_drop_confirm.png)
+![http://127.0.0.1:5500/frontend/update.html](sample_output/update_drop_success.png)
+
+
 ## API Routes & Sample Requests
 
 The backend API provides the following endpoints:
@@ -78,7 +92,6 @@ The backend API provides the following endpoints:
 
 ## Assumptions Made or Known Limitations
 
-* **Basic UI:** The frontend styling (`style.css`) is minimal and intended for basic functionality and clean presentation.
-* **No Advanced Features:** The application does not include authentication, authorization, real-time updates, or the optional real-world features mentioned in the assignment (e.g., capacity checks, available seats, login system, data export, email confirmation).
+* **Basic UI:** The frontend styling (`style.css`) is minimal.
+* **No Advanced Features:** The application does not include Email confirmation using NodeMailer, when use login, it not like real-worl which need the password.
 * **Error Handling:** Backend error handling provides basic messages and status codes. More specific error handling could be implemented.
-* **Frontend Data Fetching for Students:** The `students.html` page currently lists students but does not fully display their registered courses due to the absence of a specific backend API endpoint to retrieve registrations for a given student with course details. This would require an additional API endpoint and corresponding frontend logic.
