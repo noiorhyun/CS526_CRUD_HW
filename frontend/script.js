@@ -1,6 +1,4 @@
-// frontend/script.js
-
-const API_BASE_URL = 'http://localhost:3000'; // Adjust if your backend runs on a different port
+const API_BASE_URL = 'http://localhost:3000'; 
 
 // Global variables
 let currentStudentId = null;
@@ -12,7 +10,7 @@ async function loadCourses() {
         const response = await fetch(`${API_BASE_URL}/courses`);
         const courses = await response.json();
         const courseList = document.getElementById('courseList');
-        courseList.innerHTML = ''; // Clear existing list
+        courseList.innerHTML = ''; 
 
         // Create a table to display courses
         const table = document.createElement('table');
@@ -155,8 +153,8 @@ async function loadStudentRegistrations() {
         const response = await fetch(`${API_BASE_URL}/students`);
         const students = await response.json();
         const studentList = document.getElementById('studentList');
-        studentList.innerHTML = ''; // Clear existing list
-
+        studentList.innerHTML = ''; 
+        
         for (const student of students) {
             // Create student entry container
             const studentEntry = document.createElement('div');
