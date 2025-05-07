@@ -20,13 +20,24 @@ A full-stack web application that simulates a university's course registration p
     The frontend of this application is designed to be served from a local development server. To access the frontend pages, ensure your backend server is running, and then use the following URLs in your web browser:
 
 
-    
 
 * **Course Listing and Registration:** `http://127.0.0.1:5500/frontend/index.html`
 * **Student Registrations:** `http://127.0.0.1:5500/frontend/students.html`
 * **Update Registration:** `http://127.0.0.1:5500/frontend/update.html`
 
+* **Course Listing and Registration**: 
+![http://127.0.0.1:5500/frontend/index.html](images/home_login.png)
+![http://127.0.0.1:5500/frontend/index.html](images/home_page.png)
 
+* **Student Registrations**:
+![http://127.0.0.1:5500/frontend/students.html](images/students_page.png)
+
+* **Update Registration**:
+![http://127.0.0.1:5500/frontend/update.html](images/update_login.png)
+![http://127.0.0.1:5500/frontend/update.html](images/update_page.png)
+![http://127.0.0.1:5500/frontend/update.html](images/alert_add.png)
+![http://127.0.0.1:5500/frontend/update.html](images/alert_confirm.png)
+![http://127.0.0.1:5500/frontend/update.html](images/alert_drop.png)
 ## API Routes & Sample Requests
 
 The backend API provides the following endpoints:
