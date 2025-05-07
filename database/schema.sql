@@ -46,5 +46,3 @@ INSERT INTO registrations (student_id, course_id) VALUES
 (3, 2), -- Jane registered Database Management C
 (4, 3); -- May registered Advanced Web Programming A
 
-
-
